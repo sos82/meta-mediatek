@@ -1,0 +1,13 @@
+diff --git a/handlers/archive_handler.c b/handlers/archive_handler.c
+index 6c03ca3..5ebd2ea 100644
+--- a/handlers/archive_handler.c
++++ b/handlers/archive_handler.c
+@@ -287,7 +287,7 @@ static int install_archive_image(struct img_type *img,
+ 		img->fname, path,
+ 		img->preserve_attributes ? "preserving" : "ignoring");
+ 
+-	tf.flags = 0;
++	tf.flags = ARCHIVE_EXTRACT_PERM | ARCHIVE_EXTRACT_OWNER;
+ 	tf.exitval = -EFAULT;
+ 
+ 	if (img->preserve_attributes) {

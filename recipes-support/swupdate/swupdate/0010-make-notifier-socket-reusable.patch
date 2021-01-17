@@ -1,0 +1,26 @@
+diff --git a/core/notifier.c b/core/notifier.c
+index c3a7376..dc97c81 100644
+--- a/core/notifier.c
++++ b/core/notifier.c
+@@ -412,6 +412,7 @@ static void *notifier_thread (void __attribute__ ((__unused__)) *data)
+ {
+ 	int serverfd;
+ 	int len;
++	int sock_optval = 1;
+ 	int attempt = 0;
+ 	struct notify_ipc_msg msg;
+ 
+@@ -429,6 +430,13 @@ static void *notifier_thread (void __attribute__ ((__unused__)) *data)
+ 	int len_socket_name = strlen(&notify_server.sun_path[1]);
+ 
+ 	do {
++		if ((setsockopt(serverfd, SOL_SOCKET, SO_REUSEADDR,
++				&sock_optval, sizeof(sock_optval))) < 0) {
++			TRACE("Error setting socket options: %s", strerror(errno));
++			close(serverfd);
++			exit(2);
++		}
++	
+ 		errno = 0;
+ 		if (bind(serverfd, (const struct sockaddr *) &notify_server,
+ 			sizeof(struct sockaddr_un)) < 0) {
